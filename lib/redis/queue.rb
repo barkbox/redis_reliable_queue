@@ -5,7 +5,8 @@ class Redis
       "redis-queue version #{VERSION}"
     end
 
-    def initialize(redis: Redis.current, timeout: 0)
+    def initialize(queue_name: waiting, redis: Redis.current, timeout: 0)
+      @waiting = queue_name
       @redis = redis
       @timeout = timeout
       @last_message = nil
@@ -64,7 +65,7 @@ class Redis
     end
 
     def processing
-      @processing ||= SecureRandom.uuid
+      "#{waiting}_processing"
     end
 
     alias :size  :length

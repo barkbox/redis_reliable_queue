@@ -22,8 +22,10 @@ Simple usage
 require "redis-queue"
 redis = Redis.new
 queue = Redis::Queue.new(redis: redis)
+# Or using named queue
+queue = Redis::Queue.new(redis: redis, queue_name: 'hard_worker')
 
-#Adding some elements
+# Adding some elements
 queue.push "b" 
 queue << "a" # << is an alias of push
 

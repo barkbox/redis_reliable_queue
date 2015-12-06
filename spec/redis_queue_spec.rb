@@ -22,6 +22,40 @@ describe Redis::Queue do
     queue.class.should == Redis::Queue
   end
 
+  it 'should return an explicitly assigned queue name' do
+    queue_name = 'qqq'
+    queue = Redis::Queue.new(queue_name: queue_name)
+    queue.waiting.should be == queue_name
+  end
+
+  context 'should be possible to have two instances working with the same queue' do
+    before(:each) do
+      queue_name = 'qqq'
+      @queue1 = Redis::Queue.new(queue_name: queue_name)
+      @queue2 = Redis::Queue.new(queue_name: queue_name)
+    end
+
+    after(:each) do
+      [@queue1, @queue2].each { |q| q.clear true }
+    end
+
+    it 'should create two different instances' do
+      @queue1.should_not be eql @queue2
+    end
+
+    it 'should have the same name for waiting queues' do
+      @queue1.waiting.should be == @queue2.waiting
+    end
+
+    it 'should be possible to exchange data between the instances' do
+      payload = 'a'
+      @queue1 << payload
+      message = @queue2.pop(true)
+
+      message.should be == payload
+    end
+  end
+
   it 'should add an element to the queue' do
     @queue << 'a'
     @queue.size.should be == 1
