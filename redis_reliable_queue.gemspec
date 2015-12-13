@@ -1,24 +1,24 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'redis/queue/version'
+require 'redis/reliable_queue/version'
 
 Gem::Specification.new do |s|
-  s.name        = "redis-queue"
-  s.version     = Redis::Queue::VERSION
+  s.name        = "redis_reliable_queue"
+  s.version     = Redis::ReliableQueue::VERSION
   s.authors     = ["Francesco Laurita"]
   s.email       = ["francesco.laurita@gmail.com"]
   s.homepage    = "https://github.com/taganaka/redis-queue"
   s.summary     = %q{A distributed queue based on Redis}
   s.description = %q{
-    Adds Redis::Queue class which can be used as Distributed-Queue based on Redis.
+    Adds Redis::ReliableQueue class which can be used as Distributed-Queue based on Redis.
     Redis is often used as a messaging server to implement processing of background jobs or other kinds of messaging tasks.
     It implements Reliable-queue pattern decribed here: http://redis.io/commands/rpoplpush
   }
 
   s.licenses    = ["MIT"]
 
-  s.rubyforge_project = "redis-queue"
+  s.rubyforge_project = "redis_reliable_queue"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")

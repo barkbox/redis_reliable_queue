@@ -2,10 +2,10 @@ require 'spec_helper'
 require 'timeout'
 require 'pry'
 
-describe Redis::Queue do
+describe Redis::ReliableQueue do
   before(:all) do
     @redis = Redis.new
-    @queue = Redis::Queue.new
+    @queue = Redis::ReliableQueue.new
     @queue.clear true
   end
 
@@ -14,25 +14,25 @@ describe Redis::Queue do
   end
 
   it 'should return correct version string' do
-    Redis::Queue.version.should == "redis-queue version #{Redis::Queue::VERSION}"
+    Redis::ReliableQueue.version.should == "redis-queue version #{Redis::ReliableQueue::VERSION}"
   end
 
   it 'should create a new redis-queue object' do
-    queue = Redis::Queue.new
-    queue.class.should == Redis::Queue
+    queue = Redis::ReliableQueue.new
+    queue.class.should == Redis::ReliableQueue
   end
 
   it 'should return an explicitly assigned queue name' do
     queue_name = 'qqq'
-    queue = Redis::Queue.new(queue_name: queue_name)
+    queue = Redis::ReliableQueue.new(queue_name: queue_name)
     queue.waiting.should be == queue_name
   end
 
   context 'should be possible to have two instances working with the same queue' do
     before(:each) do
       queue_name = 'qqq'
-      @queue1 = Redis::Queue.new(queue_name: queue_name)
-      @queue2 = Redis::Queue.new(queue_name: queue_name)
+      @queue1 = Redis::ReliableQueue.new(queue_name: queue_name)
+      @queue2 = Redis::ReliableQueue.new(queue_name: queue_name)
     end
 
     after(:each) do
@@ -164,7 +164,7 @@ describe Redis::Queue do
 
   it 'should honor the timeout param in the initializer' do
     redis = Redis.new
-    queue = Redis::Queue.new(redis: redis, timeout: 2)
+    queue = Redis::ReliableQueue.new(redis: redis, timeout: 2)
     queue.clear true
 
     is_ok = true

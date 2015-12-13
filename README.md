@@ -2,7 +2,7 @@ redis-queue
 =============
 Requires the redis gem.
 
-Adds Redis::Queue class which can be used as Distributed-Queue based on Redis.
+Adds Redis::ReliableQueue class which can be used as Distributed-Queue based on Redis.
 Redis is often used as a messaging server to implement processing of background jobs or other kinds of messaging tasks.
 It implements Reliable-queue pattern decribed here: http://redis.io/commands/rpoplpush.
 
@@ -19,14 +19,14 @@ Simple usage
 ----------------
 
 ```ruby
-require "redis-queue"
+require 'redis_reliable_queue'
 redis = Redis.new
-queue = Redis::Queue.new(redis: redis)
+queue = Redis::ReliableQueue.new(redis: redis)
 # Or using named queue
-queue = Redis::Queue.new(redis: redis, queue_name: 'hard_worker')
+queue = Redis::ReliableQueue.new(redis: redis, queue_name: 'hard_worker')
 
 # Adding some elements
-queue.push "b" 
+queue.push "b"
 queue << "a" # << is an alias of push
 
 # Process messages
@@ -48,18 +48,18 @@ end
 # Process messages with timeout (starting from version 0.0.3)
 # Wait for 15 seconds for new messages, then exit
 queue.process(false, 15) do |message|
-  puts "'#{message}'" 
+  puts "'#{message}'"
 end
 
 # Process messages in a non blocking-way
 # A soon as the queue is empty, the block will exit
 queue.process(true) do |message|
-  puts "'#{message}'" 
+  puts "'#{message}'"
 end
 ```
 Contributing to redis-queue
 ----------------
- 
+
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
 * Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it.
 * Fork the project.
@@ -73,4 +73,3 @@ Copyright
 
 Copyright (c) 2013 Francesco Laurita. See LICENSE.txt for
 further details.
-

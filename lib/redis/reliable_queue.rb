@@ -1,6 +1,6 @@
 class Redis
   # :nodoc:
-  class Queue
+  class ReliableQueue
     def self.version
       "redis-queue version #{VERSION}"
     end
