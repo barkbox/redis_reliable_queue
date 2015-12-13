@@ -57,7 +57,7 @@ queue.process(true) do |message|
   puts "'#{message}'"
 end
 ```
-Contributing to redis-queue
+Contributing to redis_reliable_queue
 ----------------
 
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
