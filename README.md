@@ -8,7 +8,7 @@ It implements Reliable-queue pattern described here: http://redis.io/commands/rp
 
 Installation
 ----------------
-    $ gem install redis-queue
+    $ gem install redis_reliable_queue
 
 Testing
 ----------------
