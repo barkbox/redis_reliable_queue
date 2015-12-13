@@ -8,4 +8,4 @@ end
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 
-require 'redis-queue'
+require 'redis_reliable_queue'
