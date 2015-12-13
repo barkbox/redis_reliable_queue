@@ -1,10 +1,10 @@
-redis-queue
+redis_reliable_queue
 =============
 Requires the redis gem.
 
 Adds Redis::ReliableQueue class which can be used as Distributed-Queue based on Redis.
 Redis is often used as a messaging server to implement processing of background jobs or other kinds of messaging tasks.
-It implements Reliable-queue pattern decribed here: http://redis.io/commands/rpoplpush.
+It implements Reliable-queue pattern described here: http://redis.io/commands/rpoplpush.
 
 Installation
 ----------------
