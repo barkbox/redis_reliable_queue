@@ -69,6 +69,7 @@ class Redis
     end
 
     alias :size  :length
+    alias :count  :length
     alias :dec   :pop
     alias :shift :pop
     alias :enc   :push
