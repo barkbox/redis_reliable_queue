@@ -33,7 +33,7 @@ class Redis
     def pop(non_block = false)
       serialized_object = non_block ? redis.rpoplpush(waiting, processing) : redis.brpoplpush(waiting, processing, timeout)
       @last_message = serialized_object
-      deserialized_object = Marshal.load(@last_message) unless @last_message.nil?
+      Marshal.load(@last_message) unless @last_message.nil?
     end
 
     def commit
@@ -54,7 +54,7 @@ class Redis
     end
 
     def refill
-      while message = redis.lpop(processing)
+      while (message = redis.lpop(processing))
         redis.rpush(waiting, message)
       end
       true
