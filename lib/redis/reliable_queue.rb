@@ -68,14 +68,15 @@ class Redis
       "#{waiting}_processing"
     end
 
-    alias :size  :length
-    alias :count  :length
-    alias :dec   :pop
-    alias :shift :pop
-    alias :enc   :push
-    alias :<<    :push
+    alias_method :size, :length
+    alias_method :count, :length
+    alias_method :dec, :pop
+    alias_method :shift, :pop
+    alias_method :enc, :push
+    alias_method :<<, :push
 
     private
+
       attr_accessor :redis, :timeout
   end
 end
