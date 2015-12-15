@@ -77,7 +77,7 @@ describe Redis::ReliableQueue do
     payload = %w(a b c d e)
     payload.each { |e| @queue << e }
     test = []
-    while e = @queue.pop(true)
+    while (e = @queue.pop(true))
       test << e
     end
     payload.should be == test
@@ -96,17 +96,23 @@ describe Redis::ReliableQueue do
     @redis.llen(@queue.processing).should be == 0
   end
 
-  it 'should prcess a message' do
+  it 'should process a message' do
     @queue << 'a'
-    @queue.process(true) { |m| m.should be == 'a'; true }
+    @queue.process(true) do |m|
+      expect(m).to eq('a')
+      true
+    end
   end
 
-  it 'should prcess a message leaving it into the processing queue' do
+  it 'should process a message leaving it into the processing queue' do
     payload = %w(a a)
     serialized_payload = payload.map { |e| Marshal.dump(e) }
     payload.each { |p| @queue << p }
 
-    @queue.process(true) { |m| m.should be == 'a'; false }
+    @queue.process(true) do |m|
+      m.should be == 'a'
+      false
+    end
     @redis.lrange(@queue.processing, 0, -1).should be == serialized_payload
   end
 
@@ -117,7 +123,10 @@ describe Redis::ReliableQueue do
     @queue.clear(true)
     payload.each { |p| @queue << p }
 
-    @queue.process(true) { |m| m.should be == 'a'; false }
+    @queue.process(true) do |m|
+      expect(m).to eq('a')
+      false
+    end
     @redis.lrange(@queue.processing, 0, -1).should be == serialized_payload
     @queue.refill
     @redis.lrange(@queue.waiting, 0, -1).should be == serialized_payload
@@ -129,10 +138,10 @@ describe Redis::ReliableQueue do
     2.times { @queue << rand(100) }
     is_ok = true
     begin
-      Timeout::timeout(3) do
-        @queue.process(false, 2) { |m| true }
+      Timeout.timeout(3) do
+        @queue.process(false, 2) { |_m| true }
       end
-    rescue Timeout::Error => e
+    rescue Timeout::Error
       is_ok = false
     end
 
@@ -143,16 +152,28 @@ describe Redis::ReliableQueue do
     @queue.clear(true)
     @queue << 'a'
     @queue << 'b'
-    @queue.process(true, nil, 1) { |m| m.should be == 'a'; true }
-    @queue.process(true, nil, 1) { |m| m.should be == 'b'; true }
-    @queue.process(true, nil, 1) { |m| m.should be == nil; true }
+
+    @queue.process(true, nil, 1) do |m|
+      expect(m).to eq('a')
+      true
+    end
+
+    @queue.process(true, nil, 1) do |m|
+      expect(m).to eq('b')
+      true
+    end
+
+    @queue.process(true, nil, 1) do |m|
+      m.should be_nil
+      true
+    end
   end
 
   it 'should work with a maximum count with a negative number' do
     @queue.clear(true)
     @queue << 'a'
     @queue << 'b'
-    @queue.process(true, nil, -1) { |m| m.should be == nil}
+    @queue.process(true, nil, -1) { |m| m.should be_nil }
     expectations = ['a', 'b', nil]
     iteration = 0
     @queue.process(true, nil, 4) do |m|
@@ -169,10 +190,10 @@ describe Redis::ReliableQueue do
 
     is_ok = true
     begin
-      Timeout::timeout(4) do
+      Timeout.timeout(4) do
         queue.pop
       end
-    rescue Timeout::Error => e
+    rescue Timeout::Error
       is_ok = false
     end
     queue.clear
