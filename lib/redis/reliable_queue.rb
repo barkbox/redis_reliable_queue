@@ -5,7 +5,7 @@ class Redis
       "redis-queue version #{VERSION}"
     end
 
-    def initialize(queue_name: waiting, redis: Redis.current, timeout: 0)
+    def initialize(queue_name: waiting, redis: Redis.new, timeout: 0)
       @waiting = queue_name
       @redis = redis
       @timeout = timeout
